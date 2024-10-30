@@ -22,6 +22,19 @@ func per(a, b []int) (res []int) {
 		}
 	}
 	return res
-}
+}	
 
 // -------------------------------
+
+package main
+
+import "fmt"
+
+func main() {
+	var maps map[int]int
+	//maps := make(map[int]int)
+	fmt.Println(maps == nil, len(maps))
+	if _, ok := maps[0]; !ok {
+		fmt.Println("map is empty")
+	}
+}
