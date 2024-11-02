@@ -77,24 +77,52 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"sync"
 )
 
-func main() {
-	ch := make(chan int, 3)
-	res := []int{}
-	ch <- 1
-	ch <- 2
-	ch <- 3
-	ch <- 4
-	time.Sleep(10 * time.Second)
-	val := <-ch
-	time.Sleep(10 * time.Second)
-	close(ch)
-	fmt.Println(val)
-
-	for v := range ch {
-		res = append(res, v)
+func some(chj ...chan int) chan int {
+	wg := sync.WaitGroup{}
+	counter := 0
+	for _, val := range chj {
+		counter += len(val)
 	}
-	fmt.Println(res)
+	res := make(chan int, counter)
+	for _, che := range chj {
+		wg.Add(1)
+		go func(che chan int) {
+			defer wg.Done()
+			for val := range che {
+				res <- val
+			}
+		}(che)
+	}
+	wg.Wait()
+	close(res)
+	return res
+}
+
+func main() {
+	ch1 := make(chan int, 3)
+	ch1 <- 1
+	ch1 <- 2
+	ch1 <- 3
+	close(ch1)
+
+	ch2 := make(chan int, 3)
+	ch2 <- 4
+	ch2 <- 5
+	ch2 <- 6
+	close(ch2)
+
+	ch3 := make(chan int, 3)
+	ch3 <- 7
+	ch3 <- 8
+	ch3 <- 9
+	close(ch3)
+
+	res := some(ch1, ch2, ch3)
+
+	for val := range res {
+		fmt.Println(val)
+	}
 }
