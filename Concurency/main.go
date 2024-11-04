@@ -1,17 +1,26 @@
 package main
 
-// func main() {
-// 	counter := 20
-//
-// 	for i := 0; i <= counter; i++ {
-//
-// 		go func() {
-//
-// 			fmt.Println(i * i)
-// 		}()
-// 	}
-//
-// }
+import (
+	"fmt"
+	"runtime"
+	"sync"
+)
+
+func main() {
+	runtime.GOMAXPROCS(1)
+	counter := 5
+	wg := sync.WaitGroup{}
+	wg.Add(counter)
+
+	for i := 0; i < counter; i++ {
+
+		go func() {
+			defer wg.Done()
+			fmt.Println(i)
+		}()
+	}
+	wg.Wait()
+}
 
 // func main() {
 // 	writes := 1000
