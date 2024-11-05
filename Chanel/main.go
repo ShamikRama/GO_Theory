@@ -126,3 +126,38 @@ func main() {
 		fmt.Println(val)
 	}
 }
+
+// func main() {
+// 	ch := make(chan int, 7) // Буферизированный канал с емкостью 3
+
+// 	wg := sync.WaitGroup{}
+// 	wg.Add(1)
+// 	go func() {
+// 		defer wg.Done()
+// 		for i := 0; i < 7; i++ {
+// 			ch <- i
+// 			fmt.Println("Wrote value to channel:", i)
+// 			//time.Sleep(500 * time.Millisecond) // Задержка для наглядности
+// 		}
+// 		//close(ch)
+// 	}()
+// 	//wg.Wait()
+// 	close(ch)
+// 	wg.Add(1)
+// 	go func() {
+// 		defer wg.Done()
+// 		for i := 0; i < 7; i++ {
+// 			fmt.Println("Read value from channel:", <-ch)
+// 			//time.Sleep(1 * time.Second) // Задержка для наглядности
+// 		}
+// 		fmt.Println("Channel closed")
+// 	}()
+// 	wg.Wait()
+// 	fmt.Println("пиздец")
+
+// 	// for value := range ch {
+// 	// 	fmt.Println(value)
+// 	// }
+// 	//time.Sleep(18 * time.Second)
+
+// }
