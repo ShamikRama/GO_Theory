@@ -164,30 +164,50 @@ import (
 
 // }
 
-func main(){
-	cnt := 500
-	m := make(chan string, cnt)
-	wg := sync.WaitGroup{}
-	for i := 0 ; i < cnt; i++{
-		wg.Add(1)
-		go func (i int){
-			defer wg.Done()
-			m <- fmt.Sprintf("goroot %d", i)
-		}(i)
-	}
-	//close(m)
-	for i := 0; i < cnt; i++{
-		wg.Add(1)
-		go func(){
-			defer wg.Done()
-			Received(m)
-		}()
-	}
-	//close(m)
-	wg.Wait()
-}
+// func main(){
+// 	cnt := 500
+// 	m := make(chan string, cnt)
+// 	wg := sync.WaitGroup{}
+// 	for i := 0 ; i < cnt; i++{
+// 		wg.Add(1)
+// 		go func (i int){
+// 			defer wg.Done()
+// 			m <- fmt.Sprintf("goroot %d", i)
+// 		}(i)
+// 	}
+// 	//close(m)
+// 	for i := 0; i < cnt; i++{
+// 		wg.Add(1)
+// 		go func(){
+// 			defer wg.Done()
+// 			Received(m)
+// 		}()
+// 	}
+// 	//close(m)
+// 	wg.Wait()
+// }
 
 
-func Received(ch chan string){
-	fmt.Println(<-ch)
-}
+// func Received(ch chan string){
+// 	fmt.Println(<-ch)
+// }
+
+// func merge[T any](chans ...chan T) chan T{
+// 	res := chan T
+// 	wg := sync.WaitGroup{}
+// 	for _, singlechan := range chans {
+// 		wg.Add(1)
+// 		singlechan := singlechan
+// 		go func(){
+// 			defer wg.Done()
+// 			for val := range singlechan{
+// 				res <- val
+// 			}
+// 		}()
+// 	}
+// 	go func(){
+// 		wg.Wait()
+// 	close(res)
+// 	}
+// 	return res
+// }
