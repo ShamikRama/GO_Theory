@@ -1,9 +1,11 @@
-// package main
+package main
 
-// import (
-// 	"fmt"
-// 	"time"
-// )
+import (
+	"fmt"
+	//"time"
+	"sync"
+)
+
 
 // func sender(ch chan int) {
 // 	for i := 0; i < 10; i++ {
@@ -73,59 +75,59 @@
 // 	time.Sleep(10 * time.Second)
 // }
 
-package main
+// package main
 
-import (
-	"fmt"
-	"sync"
-)
+// import (
+// 	"fmt"
+// 	"sync"
+// )
 
-func some(chj ...chan int) chan int {
-	wg := sync.WaitGroup{}
-	counter := 0
-	for _, val := range chj {
-		counter += len(val)
-	}
-	res := make(chan int, counter)
-	for _, che := range chj {
-		wg.Add(1)
-		go func(che chan int) {
-			defer wg.Done()
-			for val := range che {
-				res <- val
-			}
-		}(che)
-	}
-	wg.Wait()
-	close(res)
-	return res
-}
+// func some(chj ...chan int) chan int {
+// 	wg := sync.WaitGroup{}
+// 	counter := 0
+// 	for _, val := range chj {
+// 		counter += len(val)
+// 	}
+// 	res := make(chan int, counter)
+// 	for _, che := range chj {
+// 		wg.Add(1)
+// 		go func(che chan int) {
+// 			defer wg.Done()
+// 			for val := range che {
+// 				res <- val
+// 			}
+// 		}(che)
+// 	}
+// 	wg.Wait()
+// 	close(res)
+// 	return res
+// }
 
-func main() {
-	ch1 := make(chan int, 3)
-	ch1 <- 1
-	ch1 <- 2
-	ch1 <- 3
-	close(ch1)
+// func main() {
+// 	ch1 := make(chan int, 3)
+// 	ch1 <- 1
+// 	ch1 <- 2
+// 	ch1 <- 3
+// 	close(ch1)
 
-	ch2 := make(chan int, 3)
-	ch2 <- 4
-	ch2 <- 5
-	ch2 <- 6
-	close(ch2)
+// 	ch2 := make(chan int, 3)
+// 	ch2 <- 4
+// 	ch2 <- 5
+// 	ch2 <- 6
+// 	close(ch2)
 
-	ch3 := make(chan int, 3)
-	ch3 <- 7
-	ch3 <- 8
-	ch3 <- 9
-	close(ch3)
+// 	ch3 := make(chan int, 3)
+// 	ch3 <- 7
+// 	ch3 <- 8
+// 	ch3 <- 9
+// 	close(ch3)
 
-	res := some(ch1, ch2, ch3)
+// 	res := some(ch1, ch2, ch3)
 
-	for val := range res {
-		fmt.Println(val)
-	}
-}
+// 	for val := range res {
+// 		fmt.Println(val)
+// 	}
+// }
 
 // func main() {
 // 	ch := make(chan int, 7) // Буферизированный канал с емкостью 3
@@ -161,3 +163,31 @@ func main() {
 // 	//time.Sleep(18 * time.Second)
 
 // }
+
+func main(){
+	cnt := 500
+	m := make(chan string, cnt)
+	wg := sync.WaitGroup{}
+	for i := 0 ; i < cnt; i++{
+		wg.Add(1)
+		go func (i int){
+			defer wg.Done()
+			m <- fmt.Sprintf("goroot %d", i)
+		}(i)
+	}
+	//close(m)
+	for i := 0; i < cnt; i++{
+		wg.Add(1)
+		go func(){
+			defer wg.Done()
+			Received(m)
+		}()
+	}
+	//close(m)
+	wg.Wait()
+}
+
+
+func Received(ch chan string){
+	fmt.Println(<-ch)
+}
