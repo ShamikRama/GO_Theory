@@ -144,7 +144,7 @@ import (
 // 		//close(ch)
 // 	}()
 // 	//wg.Wait()
-// 	close(ch)
+// 	//close(ch)
 // 	wg.Add(1)
 // 	go func() {
 // 		defer wg.Done()
@@ -152,14 +152,15 @@ import (
 // 			fmt.Println("Read value from channel:", <-ch)
 // 			//time.Sleep(1 * time.Second) // Задержка для наглядности
 // 		}
+// 		close(ch)
 // 		fmt.Println("Channel closed")
 // 	}()
 // 	wg.Wait()
 // 	fmt.Println("пиздец")
 
-// 	// for value := range ch {
-// 	// 	fmt.Println(value)
-// 	// }
+// 	for value := range ch {
+// 		fmt.Println(value)
+// 	}
 // 	//time.Sleep(18 * time.Second)
 
 // }
@@ -207,7 +208,32 @@ import (
 // 	}
 // 	go func(){
 // 		wg.Wait()
-// 	close(res)
+// 		close(res)
 // 	}
 // 	return res
+// }
+
+// func main(){
+// 	ch := make(chan int)
+// 	wg := sync.WaitGroup{}
+// 	for i:=0; i<20; i++{
+// 		wg.Add(1)
+// 		go func(){
+// 			defer wg.Done()
+// 			ch<-i
+// 		}()
+// 	}
+// 	for i:=0; i<5; i++{
+// 		wg.Add(1)
+// 		go func(){
+// 			defer wg.Done()
+// 			fmt.Println(<-ch)
+// 		}()
+// 	}
+// 	wg.Add(1)
+// 	go func(){
+// 		wg.Wait()
+// 		close(ch)
+// 	}()
+// 	//time.Sleep(time.Second * 1)
 // }
