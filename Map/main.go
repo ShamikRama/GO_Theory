@@ -26,18 +26,18 @@
 
 // -------------------------------
 
-package main
+// package main
 
-import "fmt"
+// import "fmt"
 
-func main() {
-	//var maps map[int]int
-	maps := make(map[int]int)
-	fmt.Println(maps == nil, len(maps))
-	if _, ok := maps[0]; !ok {
-		fmt.Println("map is empty")
-	}
-}
+// func main() {
+// 	var maps map[int]int
+// 	//maps := make(map[int]int)
+// 	fmt.Println(maps == nil, len(maps))
+// 	if _, ok := maps[0]; !ok {
+// 		fmt.Println("map is empty")
+// 	}
+// }
 
 // --------------------------------
 
@@ -62,22 +62,22 @@ func main() {
 //     fmt.Printf("Memory usage after: %d bytes\n", m.Alloc)
 // }
 
-package main
+// package main
 
-import "fmt"
+// import "fmt"
 
-type account struct {
-	balance int
-}
+// type account struct {
+// 	balance int
+// }
 
-func main(){
-m:=make(map[string]*account)
-m["user1"]=&account{
-	balance:100,
-}
-m["user1"].balance += 50
-	//Написать что-то, чтобы увеличить баланс на 50
-fmt.Println(m["user1"].balance)
+// func main(){
+// m:=make(map[string]*account)
+// m["user1"]=&account{
+// 	balance:100,
+// }
+// m["user1"].balance += 50
+// 	//Написать что-то, чтобы увеличить баланс на 50
+// fmt.Println(m["user1"].balance)
 
 
-}
+// }
