@@ -283,34 +283,60 @@
 // }
 
 
-package main
+// package main
 
-import (
-    "fmt"
-	"time"
-)
+// import (
+//     "fmt"
+// 	"time"
+// )
 
-func main() {
-    jobs := make(chan int, 2) // Буферизованный канал с размером буфера 2
+// func main() {
+//     jobs := make(chan int, 2) // Буферизованный канал с размером буфера 2
 
-    go func() {
-        for j := 1; j <= 3; j++ {
-            jobs <- j
-            fmt.Println("sent job", j)
-        }
-        //close(jobs)
-    }()
+//     go func() {
+//         for j := 1; j <= 3; j++ {
+//             jobs <- j
+//             fmt.Println("sent job", j)
+//         }
+//         //close(jobs)
+//     }()
 
-	go func(){
-		for j := 1; j <= 5; j++ {
-            fmt.Println("recived job", <- jobs)
-        }
-	}()
+// 	go func(){
+// 		for j := 1; j <= 5; j++ {
+//             fmt.Println("recived job", <- jobs)
+//         }
+// 	}()
 
-    // for j := range jobs {
-    //     fmt.Println("waha job", j)
-    // }
-	time.Sleep(time.Second*10)
-    fmt.Println("all jobs received")
+//     // for j := range jobs {
+//     //     fmt.Println("waha job", j)
+//     // }
+// 	time.Sleep(time.Second*10)
+//     fmt.Println("all jobs received")
 
-}
+// }
+
+
+
+
+
+
+// import (
+// 	"fmt"
+// 	//"sync"
+// 	"time"
+// )
+
+// func main() {
+// 		ch := make(chan string)
+// 		var res string
+		
+
+// 			ch <- "A"	// пишем
+// 			close(ch)
+
+	
+// 	res = <-ch  // читаем
+	
+// 		time.Sleep(1*time.Second)
+// 		fmt.Println(res)
+// }
