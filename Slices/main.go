@@ -32,3 +32,35 @@
 // 	fmt.Printf("4. a=%v\n", a) // [1,10,3,4,5,6,7] +
 
 // }
+
+package main 
+
+import (
+	"fmt"
+	"sync"
+)
+
+func main(){
+	arr := []int{21, 35, 123, 45, 324, 333}
+	wg := sync.WaitGroup{}
+	done := make(chan bool)
+	//mu := sync.Mutex{}
+	mx := arr[0]
+	for _, val := range arr {
+		wg.Add(1)
+		go func(){
+			defer wg.Done()
+			//mu.Lock()
+			if val > mx{
+				mx = val
+
+			}
+			//mu.Unlock()
+		}()
+		done <- true
+	}
+	<-done
+
+	wg.Wait()
+	fmt.Println(mx)
+}

@@ -286,39 +286,44 @@
 // package main
 
 // import (
-//     "fmt"
-// 	"time"
+// 	"fmt"
+// 	"sync"
 // )
 
 // func main() {
-//     jobs := make(chan int, 2) // Буферизованный канал с размером буфера 2
+// 	jobs := make(chan int, 2) // Буферизованный канал с размером буфера 2
+// 	done := make(chan bool)
+// 	var wg sync.WaitGroup
 
-//     go func() {
-//         for j := 1; j <= 3; j++ {
-//             jobs <- j
-//             fmt.Println("sent job", j)
-//         }
-//         //close(jobs)
-//     }()
+// 	// Добавляем одну горутину в WaitGroup
+// 	wg.Add(1)
 
-// 	go func(){
-// 		for j := 1; j <= 5; j++ {
-//             fmt.Println("recived job", <- jobs)
-//         }
+// 	go func() {
+// 		defer wg.Done()
+// 		for i := 0; i < 5; i++ {
+// 			i := i
+// 			//select {
+// 			 jobs <- i
+// 				fmt.Println("Отправлено", i)
+// 			//default:
+// 			//	fmt.Println("Канал заполнен, пропускаем отправку")
+// 			}
+// 		}()
+// 		close(jobs) // Закрываем канал после отправки всех данных
+	
+
+// 	go func() {
+// 		wg.Wait() // Ждем, пока все горутины завершат работу
+// 		done <- true
 // 	}()
 
-//     // for j := range jobs {
-//     //     fmt.Println("waha job", j)
-//     // }
-// 	time.Sleep(time.Second*10)
-//     fmt.Println("all jobs received")
+// 	for j := range jobs {
+// 		fmt.Println("Получено задание:", j)
+// 	}
 
+// 	<-done
+// 	fmt.Println("Все задания получены")
 // }
-
-
-
-
-
 
 // import (
 // 	"fmt"
