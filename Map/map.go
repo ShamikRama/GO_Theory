@@ -7,6 +7,11 @@ if _, ok := m["key"]; !ok {
 	fmt.Println("map is empty")
 }
 
+// как достать значение из мапы 
+
+if val, ok := mapa[key]; ok	{
+	return val
+}
 
 maps := make(map[int]int) // память выделена 
 var maps map[int]int // память не выделена 
