@@ -57,10 +57,9 @@ func main(){
 			}
 			//mu.Unlock()
 		}()
-		done <- true
 	}
 	<-done
 
-	wg.Wait()
+	//wg.Wait()
 	fmt.Println(mx)
 }

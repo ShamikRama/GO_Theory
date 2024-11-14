@@ -33,3 +33,8 @@ func main() {
 
 	player2.Kick(player2.power)
 }
+
+
+type Error interface {
+	
+}

@@ -52,33 +52,3 @@
 
 
 
-package main
-
-import (
-    "fmt"
-    "sync"
-)
-
-
-func Newarray(arr [4]int, new chan<-int){
-	wg := sync.WaitGroup{}
-	for _, val := range arr{
-		wg.Add(1)
-        go func(val int){
-			defer wg.Done()
-            new <- val
-        }(val)
-    }
-	wg.Wait()
-	close(new)
-}
-
-func main(){
-    array := [4]int{2,3,4,5}
-	newchannel := make(chan int, len(array))
-	Newarray(array, newchannel)
-	for val := range newchannel{
-		fmt.Println(val)
-	}
-}
-

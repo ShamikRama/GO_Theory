@@ -24,28 +24,4 @@
 
 // chel.Get()
 
-package main
-
-import (
-    "fmt"
-    "sync"
-)
-
-func main(){
-    //array := [4]int{2,3,4,5}
-    fmt.Println(newarray(array))
-}
-
-func newarray(arr []int)[]int{
-    mu := sync.WaitGroup{}
-    newarray := make([]int, 0, len(arr))
-    for _, val := range arr{
-        go func(){
-            mu.Lock()
-            defer mu.Unlock()
-            newarray := append(newarray, val * val)
-        }()
-    }
-    return newarray
-}
 
