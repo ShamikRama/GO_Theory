@@ -3,9 +3,10 @@ package cache
 import (
 	"context"
 	"errors"
+	"sync"
+
 	"github.com/glebnaz/cache-webinar/internal/model"
 	lru "github.com/hashicorp/golang-lru"
-	"sync"
 )
 
 type LRU struct {
@@ -31,12 +32,9 @@ func (l *LRU) WriteToSubs(ctx context.Context, post model.Post, subs []string) e
 		if !ok {
 			toWrite = []model.Post{post}
 		} else {
-			toWrite, ok = val.([]model.Post)
+			toWrite, ok := val.([]model.Post)
 			if !ok {
-				return errors.New("cache is bad type")
-			}
-			if toWrite != nil {
-				toWrite = []model.Post{post}
+				return errors.New("not a type")
 			}
 			toWrite = append(toWrite, post)
 		}
@@ -52,12 +50,14 @@ func (l *LRU) ReadFeed(ctx context.Context, id string) ([]model.Post, error) {
 
 	val, ok := l.data.Get(id)
 	if !ok {
-		return nil, nil
+		return []model.Post{}, errors.New("nothing")
 	}
 
 	feed, ok := val.([]model.Post)
 	if !ok {
-		return nil, errors.New("cache is bad type")
+		return feed, errors.New("not a type")
 	}
+
 	return feed, nil
+
 }

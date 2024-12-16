@@ -2,10 +2,9 @@
 
 // import (
 // 	"fmt"
-// 	//"time"
 // 	"sync"
+// 	"time"
 // )
-
 
 // func sender(ch chan int) {
 // 	for i := 0; i < 10; i++ {
@@ -23,19 +22,19 @@
 // 			return
 // 		}
 // 		fmt.Println("Received:", val)
-// 		time.Sleep(500 * time.Millisecond) // Имитация задержки чтения
+// 		time.Sleep(10 * time.Millisecond) // Имитация задержки чтения
 // 	}
 // }
 
 // func main() {
 // 	ch := make(chan int, 3) // Буферизированный канал с размером буфера 3
-
+// 	wg := sync.WaitGroup{}
+// 	wg.Add(1)
 // 	go sender(ch)
-// 	time.Sleep(40 * time.Second)
+// 	wg.Add(1)
 // 	go receiver(ch)
 
-// 	// Даем время горутинам выполниться
-// 	time.Sleep(5 * time.Second)
+// 	wg.Wait()
 // }
 
 // package main
@@ -84,19 +83,19 @@
 
 // func some(chj ...chan int) chan int {
 // 	wg := sync.WaitGroup{}
-// 	counter := 0
-// 	for _, val := range chj {
-// 		counter += len(val)
+// 	size := 0
+// 	for _, c := range chj {
+// 		size += len(c)
 // 	}
-// 	res := make(chan int, counter)
-// 	for _, che := range chj {
+// 	res := make(chan int, size)
+// 	for _, cha := range chj {
 // 		wg.Add(1)
-// 		go func(che chan int) {
+// 		go func(cha chan int) {
 // 			defer wg.Done()
-// 			for val := range che {
+// 			for val := range cha {
 // 				res <- val
 // 			}
-// 		}(che)
+// 		}(cha)
 // 	}
 // 	wg.Wait()
 // 	close(res)
@@ -165,123 +164,35 @@
 
 // }
 
-// func main(){
+// package main
+
+// import (
+// 	"fmt"
+// 	"sync"
+// )
+
+// func main() {
 // 	cnt := 500
 // 	m := make(chan string, cnt)
 // 	wg := sync.WaitGroup{}
-// 	for i := 0 ; i < cnt; i++{
+// 	for i := 0; i < cnt; i++ {
 // 		wg.Add(1)
-// 		go func (i int){
+// 		go func(i int) {
 // 			defer wg.Done()
 // 			m <- fmt.Sprintf("goroot %d", i)
 // 		}(i)
 // 	}
-// 	//close(m)
-// 	for i := 0; i < cnt; i++{
-// 		wg.Add(1)
-// 		go func(){
-// 			defer wg.Done()
-// 			Received(m)
-// 		}()
-// 	}
-// 	//close(m)
-// 	wg.Wait()
-// }
 
-
-// func Received(ch chan string){
-// 	fmt.Println(<-ch)
-// }
-
-// func merge[T any](chans ...chan T) chan T{
-// 	res := chan T
-// 	wg := sync.WaitGroup{}
-// 	for _, singlechan := range chans {
-// 		wg.Add(1)
-// 		singlechan := singlechan
-// 		go func(){
-// 			defer wg.Done()
-// 			for val := range singlechan{
-// 				res <- val
-// 			}
-// 		}()
-// 	}
-// 	go func(){
+// 	go func() {
 // 		wg.Wait()
-// 		close(res)
-// 	}
-// 	return res
-// }
-
-// func main(){
-// 	ch := make(chan int)
-// 	wg := sync.WaitGroup{}
-// 	for i:=0; i<20; i++{
-// 		wg.Add(1)
-// 		go func(){
-// 			defer wg.Done()
-// 			ch<-i
-// 		}()
-// 	}
-// 	for i:=0; i<5; i++{
-// 		wg.Add(1)
-// 		go func(){
-// 			defer wg.Done()
-// 			fmt.Println(<-ch)
-// 		}()
-// 	}
-// 	wg.Add(1)
-// 	go func(){
-// 		wg.Wait()
-// 		close(ch)
+// 		close(m)
 // 	}()
-// 	//time.Sleep(time.Second * 1)
+
+// 	for val := range m {
+// 		fmt.Println(val)
+// 	}
+
 // }
-
-// package main
-
-// import "fmt"
-
-// func main() {
-//     jobs := make(chan int, 5)
-//     done := make(chan bool)
-// 	wg:= sync.WaitGroup{}
-// 	wg.Add(1)
-//     go func() {
-// 		defer wg.Done()
-//         for {
-//             j, more := <-jobs
-//             if more {
-//                 fmt.Println("received job", j)
-//             } else {
-//                 fmt.Println("received all jobs")
-//                 done <- true
-//                 return
-//             }
-//         }
-//     }()
-	
-	
-//     for i := 1; i <= 3; i++ {
-// 		wg.Add(1)
-// 		go func(){
-// 			defer wg.Done()
-//         jobs <- i
-//         fmt.Println("sent job", i)
-// 		fmt.Println("sent all jobs")
-//     }()
-// }
-// 	wg.Add(1)
-// 	go func(){
-// 		defer wg.Done()
-// 		wg.Wait()
-// 		close(jobs)
-// 	}()
-//     // fmt.Println("sent all jobs")
-	
-//     //<-done
-// }
-
 
 // package main
 
@@ -291,57 +202,63 @@
 // )
 
 // func main() {
-// 	jobs := make(chan int, 2) // Буферизованный канал с размером буфера 2
-// 	done := make(chan bool)
-// 	var wg sync.WaitGroup
-
-// 	// Добавляем одну горутину в WaitGroup
-// 	wg.Add(1)
-
-// 	go func() {
-// 		defer wg.Done()
-// 		for i := 0; i < 5; i++ {
-// 			i := i
-// 			//select {
-// 			 jobs <- i
-// 				fmt.Println("Отправлено", i)
-// 			//default:
-// 			//	fmt.Println("Канал заполнен, пропускаем отправку")
-// 			}
+// 	ch := make(chan int)
+// 	wg := sync.WaitGroup{}
+// 	for i := 0; i < 20; i++ {
+// 		wg.Add(1)
+// 		go func() {
+// 			defer wg.Done()
+// 			ch <- i
 // 		}()
-// 		close(jobs) // Закрываем канал после отправки всех данных
-	
-
-// 	go func() {
-// 		wg.Wait() // Ждем, пока все горутины завершат работу
-// 		done <- true
-// 	}()
-
-// 	for j := range jobs {
-// 		fmt.Println("Получено задание:", j)
 // 	}
 
-// 	<-done
-// 	fmt.Println("Все задания получены")
+// 	go func() {
+// 		wg.Wait()
+// 		close(ch)
+// 	}()
+// 	for val := range ch {
+// 		fmt.Println(val)
+// 	}
 // }
 
-// import (
-// 	"fmt"
-// 	//"sync"
-// 	"time"
-// )
+package main
 
-// func main() {
-// 		ch := make(chan string)
-// 		var res string
-		
+import (
+	"fmt"
+	"sync"
+)
 
-// 			ch <- "A"	// пишем
-// 			close(ch)
+func main() {
+	jobs := make(chan int, 2) // Буферизованный канал с размером буфера 2
+	done := make(chan bool)
+	var wg sync.WaitGroup
 
-	
-// 	res = <-ch  // читаем
-	
-// 		time.Sleep(1*time.Second)
-// 		fmt.Println(res)
-// }
+	// Добавляем одну горутину в WaitGroup
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+		for i := 0; i < 5; i++ {
+			i := i
+			select {
+			case jobs <- i:
+				fmt.Println("Отправлено", i)
+			default:
+				fmt.Println("Канал заполнен, пропускаем отправку")
+			}
+		}
+		close(jobs) // Закрываем канал после отправки всех данных
+	}()
+
+	go func() {
+		wg.Wait() // Ждем, пока все горутины завершат работу
+		done <- true
+	}()
+
+	for j := range jobs {
+		fmt.Println("Получено задание:", j)
+	}
+
+	<-done
+	fmt.Println("Все задания получены")
+}

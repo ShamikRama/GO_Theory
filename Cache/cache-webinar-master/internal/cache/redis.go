@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
 	"github.com/glebnaz/cache-webinar/internal/model"
 	"github.com/go-redis/redis/v8"
 )
@@ -68,4 +69,8 @@ func NewRedisCache(redisHost string) (*RedisCache, error) {
 	})
 	_, err := rdb.Ping(context.Background()).Result()
 	return &RedisCache{cli: rdb}, err
+}
+
+type Cache struct {
+	data map[string][]model.Post
 }
