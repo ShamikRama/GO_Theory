@@ -24,8 +24,6 @@
 
 // }
 
-
-
 // package main
 
 // import (
@@ -50,5 +48,28 @@
 // 	fmt.Println("Sum:", sum)
 // }
 
+package main
 
+import (
+	"fmt"
+)
 
+type user struct {
+	balance int64
+}
+
+func main() {
+	users := []*user{
+		{balance: 1000},
+		{balance: 2000},
+	}
+
+	for _, u := range users {
+		u.balance += 100
+	}
+
+	for _, u := range users {
+		fmt.Println(u)
+	}
+
+}

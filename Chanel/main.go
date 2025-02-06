@@ -223,42 +223,172 @@
 
 package main
 
-import (
-	"fmt"
-	"sync"
-)
+// func main() {
+// 	jobs := make(chan int, 2) // Буферизованный канал с размером буфера 2
+// 	done := make(chan bool)
+// 	var wg sync.WaitGroup
 
-func main() {
-	jobs := make(chan int, 2) // Буферизованный канал с размером буфера 2
-	done := make(chan bool)
-	var wg sync.WaitGroup
+// 	// Добавляем одну горутину в WaitGroup
+// 	wg.Add(1)
 
-	// Добавляем одну горутину в WaitGroup
-	wg.Add(1)
+// 	go func() {
+// 		defer wg.Done()
+// 		for i := 0; i < 5; i++ {
+// 			i := i
+// 			select {
+// 			case jobs <- i:
+// 				fmt.Println("Отправлено", i)
+// 			default:
+// 				fmt.Println("Канал заполнен, пропускаем отправку")
+// 			}
+// 		}
+// 		close(jobs) // Закрываем канал после отправки всех данных
+// 	}()
 
-	go func() {
-		defer wg.Done()
-		for i := 0; i < 5; i++ {
-			i := i
-			select {
-			case jobs <- i:
-				fmt.Println("Отправлено", i)
-			default:
-				fmt.Println("Канал заполнен, пропускаем отправку")
-			}
-		}
-		close(jobs) // Закрываем канал после отправки всех данных
-	}()
+// 	go func() {
+// 		wg.Wait() // Ждем, пока все горутины завершат работу
+// 		done <- true
+// 	}()
 
-	go func() {
-		wg.Wait() // Ждем, пока все горутины завершат работу
-		done <- true
-	}()
+// 	for j := range jobs {
+// 		fmt.Println("Получено задание:", j)
+// 	}
 
-	for j := range jobs {
-		fmt.Println("Получено задание:", j)
-	}
+// 	<-done
+// 	fmt.Println("Все задания получены")
+// }
 
-	<-done
-	fmt.Println("Все задания получены")
-}
+// func main() {
+// 	ch := make(chan int, 3)
+// 	wg := &sync.WaitGroup{}
+// 	wg.Add(3)
+// 	for i := 0; i < 3; i++ {
+// 		go func(v int) {
+// 			defer wg.Done()
+// 			ch <- v * v
+// 		}(i)
+// 	}
+
+// 	go func() {
+// 		wg.Wait()
+// 		close(ch)
+// 	}()
+
+// for i := 0; i < 3; i++ {
+// 	wg.Add(1)
+// 	go func(v int) {
+// 		defer wg.Done()
+// 		fmt.Println(<-ch)
+// 	}(i)
+// }
+// wg.Wait()
+// 	var sum int
+// 	for v := range ch {
+// 		sum += v
+// 	}
+// 	fmt.Printf("result: %d\n", sum)
+// }
+
+// func main() {
+// 	a := 5000
+// 	for i := 0; i < a; i++ {
+// 		go fmt.Println(i)
+// 	}
+// }
+
+// func main() {
+// 	ch := make(chan int)
+// 	go func() {
+// 		fmt.Println(<-ch)
+// 	}()
+// 	ch <- 1
+
+// }
+
+// func main() {
+// 	ch := make(chan bool)
+// 	wg := &sync.WaitGroup{}
+// 	wg.Add(1)
+// 	// go func() {
+// 	// 	defer wg.Done()
+// 	// 	<-ch
+// 	// }()
+// 	go func() {
+// 		defer wg.Done()
+// 		ch <- true
+// 	}()
+// 	wg.Add(1)
+// 	// go func() {
+// 	// 	defer wg.Done()
+// 	// 	<-ch
+// 	// }()
+// 	go func() {
+// 		defer wg.Done()
+// 		ch <- true
+// 	}()
+// 	go func() {
+// 		wg.Wait()
+// 		close(ch)
+// 	}()
+// 	for val := range ch {
+// 		fmt.Println(val)
+// 	}
+// }
+
+// func main() {
+// 	ch := make(chan bool)
+// 	ch2 := make(chan bool)
+// 	ch3 := make(chan bool)
+// 	go func() {
+// 		ch <- true
+// 	}()
+// 	go func() {
+// 		ch2 <- true
+// 	}()
+// 	go func() {
+// 		ch3 <- true
+// 	}()
+
+// 	select {
+// 	case <-ch:
+// 		fmt.Printf("val from ch")
+// 	case <-ch2:
+// 		fmt.Printf("val from ch2")
+// 	case <-ch3:
+// 		fmt.Printf("val from ch3")
+// 	}
+// }
+
+// var globalMap = map[string][]int{"test": make([]int, 0), "test2": make([]int, 0), "test3": make([]int, 0)}
+// var a = 0
+// var m sync.Mutex
+
+// func main() {
+// 	wg := sync.WaitGroup{}
+// 	wg.Add(3)
+// 	go func() {
+// 		defer wg.Done()
+// 		m.Lock()
+// 		a = 10
+// 		globalMap["test"] = append(globalMap["test"], a)
+// 		m.Unlock()
+
+// 	}()
+// 	go func() {
+// 		defer wg.Done()
+// 		m.Lock()
+// 		a = 11
+// 		globalMap["test2"] = append(globalMap["test2"], a)
+// 		m.Unlock()
+// 	}()
+// 	go func() {
+// 		defer wg.Done()
+// 		m.Lock()
+// 		a = 12
+// 		globalMap["test3"] = append(globalMap["test3"], a)
+// 		m.Unlock()
+// 	}()
+// 	wg.Wait()
+// 	fmt.Printf("%v", globalMap)
+// 	fmt.Printf("%d", a)
+// }

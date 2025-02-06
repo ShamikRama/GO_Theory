@@ -9,7 +9,7 @@
 // func per(a, b []int) (res []int) {
 // 	counter := map[int]int
 // 	for _, elem := range a {
-// 		if counter[elem] == 0 { // проверка существует ли элемент в мапе
+// 		if counter[elem] == 0 { // проверка не существует ли элемент в мапе
 // 			counter[elem] = 1
 // 		} else {
 // 			counter[elem] += 1
@@ -79,7 +79,78 @@
 // 	//Написать что-то, чтобы увеличить баланс на 50
 // fmt.Println(m["user1"].balance)
 
-
 // }
 
+package main
 
+import "fmt"
+
+// дубликат
+func dub(obj []string) []string {
+	res := make([]string, 0, len(obj))
+
+	counter := make(map[string]int)
+
+	for _, val := range obj {
+		counter[val]++
+		if counter[val] == 2 {
+			res = append(res, val)
+		}
+	}
+
+	return res
+}
+
+// недубликат
+func reversedub(obj []string) {
+	counter := make(map[string]int)
+
+	for _, val := range obj {
+		counter[val]++
+	}
+
+	for key, val := range counter {
+		if val == 1 {
+			fmt.Printf("%s ", key)
+		}
+	}
+	fmt.Println()
+}
+
+// пересечение из двух слайсов
+func intersection(a, b []string) []string {
+	counter := make(map[string]bool)
+	res := make([]string, 0)
+	for _, elem := range a {
+		counter[elem] = true
+	}
+
+	for _, elem := range b {
+		if counter[elem] {
+			res = append(res, elem)
+		}
+	}
+	return res
+}
+
+// вывести све элементы только в одном экземпляре
+func oneobj(obj []string) {
+	res := make(map[string]struct{})
+
+	for _, val := range obj {
+		res[val] = struct{}{}
+	}
+
+	fmt.Println(res)
+}
+
+func main() {
+	arr := []string{"a", "bb", "a", "bb", "c", "d"}
+	arr1 := []string{"v", "a", "h", "g"}
+	arr2 := []string{"v", "a", "f", "k"}
+	fmt.Println(dub(arr))
+	reversedub(arr)
+	oneobj(arr)
+	fmt.Println(intersection(arr1, arr2))
+
+}
