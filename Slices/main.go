@@ -33,33 +33,117 @@
 
 // }
 
-package main 
+// package main
 
-import (
-	"fmt"
-	"sync"
-)
+// import (
+// 	"fmt"
+// 	"sync"
+// )
 
-func main(){
-	arr := []int{21, 35, 123, 45, 324, 333}
-	wg := sync.WaitGroup{}
-	done := make(chan bool)
-	//mu := sync.Mutex{}
-	mx := arr[0]
-	for _, val := range arr {
-		wg.Add(1)
-		go func(){
-			defer wg.Done()
-			//mu.Lock()
-			if val > mx{
-				mx = val
+// func main(){
+// 	arr := []int{21, 35, 123, 45, 324, 333}
+// 	wg := sync.WaitGroup{}
+// 	done := make(chan bool)
+// 	//mu := sync.Mutex{}
+// 	mx := arr[0]
+// 	for _, val := range arr {
+// 		wg.Add(1)
+// 		go func(){
+// 			defer wg.Done()
+// 			//mu.Lock()
+// 			if val > mx{
+// 				mx = val
 
-			}
-			//mu.Unlock()
-		}()
-	}
-	<-done
+// 			}
+// 			//mu.Unlock()
+// 		}()
+// 	}
+// 	<-done
 
-	//wg.Wait()
-	fmt.Println(mx)
-}
+// 	//wg.Wait()
+// 	fmt.Println(mx)
+// }
+
+// package main
+
+// import (
+// 	"fmt"
+// 	"sync"
+// )
+
+// func merge(chans ...chan int) chan int {
+// 	lena := 0
+// 	for _, val := range chans {
+// 		lena += len(val)
+// 	}
+
+// 	wg := sync.WaitGroup{}
+
+// 	res := make(chan int, lena)
+
+// 	for _, val := range chans {
+// 		wg.Add(1)
+// 		go func() {
+// 			defer wg.Done()
+// 			for val1 := range val {
+// 				res <- val1
+// 			}
+// 		}()
+// 	}
+
+// 	return res
+// }
+
+// func main() {
+// 	ch1 := make(chan int, 3)
+// 	ch1 <- 1
+// 	ch1 <- 2
+// 	ch1 <- 3
+// 	close(ch1)
+
+// 	ch2 := make(chan int, 3)
+// 	ch2 <- 4
+// 	ch2 <- 5
+// 	ch2 <- 6
+// 	close(ch2)
+
+// 	ch3 := make(chan int, 3)
+// 	ch3 <- 7
+// 	ch3 <- 8
+// 	ch3 <- 9
+// 	close(ch3)
+
+// 	res := merge(ch1, ch2, ch3)
+
+// 	for val := range res {
+// 		fmt.Println(val)
+// 	}
+// }
+
+// package main
+
+// import "fmt"
+
+// // вывести дубликаты
+// // input [a, bb, b, aa, bb, a]
+// // output [a, bb]
+
+// func dub(in []string) {
+// 	res := make([]string, 0, len(in)/2)
+
+// 	map1 := make(map[string]int)
+
+// 	for _, val := range in {
+// 		map1[val]++
+// 		if map1[val] == 2 {
+// 			res = append(res, val)
+// 		}
+// 	}
+
+// 	fmt.Println(res)
+// }
+
+// func main() {
+// 	in := []string{"a", "bb", "b", "aa", "bb", "a"}
+// 	dub(in)
+// }
