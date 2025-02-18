@@ -221,7 +221,7 @@
 // 	}
 // }
 
-package main
+//package main
 
 // func main() {
 // 	jobs := make(chan int, 2) // Буферизованный канал с размером буфера 2
@@ -392,3 +392,56 @@ package main
 // 	fmt.Printf("%v", globalMap)
 // 	fmt.Printf("%d", a)
 // }
+
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+// программа должна запускать N корутин которые выполняют функцию do
+// так же программа должна подсчитывать сколько было проведено секунд во сне, выводить результат каждую секунду
+// так же определить, какая из горутин закончит выполнение первая
+
+func do(dur int, ch chan time.Duration, wg *sync.WaitGroup) {
+	defer wg.Done()
+	sleepDur := time.Duration(dur) * time.Second
+	time.Sleep(sleepDur)
+	ch <- sleepDur
+}
+
+func main() {
+	wg := sync.WaitGroup{}
+	n := 4
+	ch := make(chan time.Duration, n)
+	for i := 0; i < n; i++ {
+		wg.Add(1)
+		go do(i, ch, &wg)
+	}
+
+	totalSleep := time.Duration(0)
+	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
+
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
+
+	for {
+		select {
+		case sleepDur, ok := <-ch:
+			if !ok {
+				fmt.Println("все горутины завершены")
+				return
+			}
+			totalSleep += sleepDur
+			fmt.Println("горутина спала", sleepDur)
+		case <-ticker.C:
+			fmt.Println("Общее время сна:", totalSleep)
+		}
+	}
+
+}
