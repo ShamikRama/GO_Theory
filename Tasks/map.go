@@ -114,10 +114,9 @@ func mergeToMap(data map[string][]string, key string, newValue []string) {
 	for _, val := range newValue {
 		if _, ok := uMap[val]; !ok {
 			data[key] = append(data[key], val)
-			uMap[val] = struct{}{} // это вроде необязательно
+			uMap[val] = struct{}{} // здесь newValue могут быть дубликаты поэтому я сделал так
 		}
 	}
-
 }
 
 func main() {
@@ -127,7 +126,7 @@ func main() {
 	}
 	fmt.Println(oldMap)
 
-	newValues := []string{"banana", "chery"}
+	newValues := []string{"banana", "chery", "banana", "chery"}
 	fmt.Println(newValues)
 
 	mergeToMap(oldMap, "group1", newValues)
