@@ -1,26 +1,28 @@
-// package main
+package main
 
-// import (
-// 	"fmt"
-// 	"runtime"
-// 	"sync"
-// )
+import (
+	"fmt"
+	"sync"
+)
 
-// func main() {
-// 	runtime.GOMAXPROCS(1)
-// 	counter := 5
-// 	wg := sync.WaitGroup{}
-// 	wg.Add(counter)
+func main() {
+	counter := 0
+	wg := sync.WaitGroup{}
+	//mu := sync.Mutex{}
+	wg.Add(12)
 
-// 	for i := 0; i < counter; i++ {
+	for i := 0; i < 12; i++ {
 
-// 		go func() {
-// 			defer wg.Done()
-// 			fmt.Println(i)
-// 		}()
-// 	}
-// 	wg.Wait()
-// }
+		go func() {
+			defer wg.Done()
+			//mu.Lock()
+			counter++
+			//mu.Unlock()
+		}()
+	}
+	wg.Wait()
+	fmt.Println(counter)
+}
 
 // func main() {
 // 	writes := 1000

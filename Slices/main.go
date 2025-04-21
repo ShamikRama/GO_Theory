@@ -33,33 +33,53 @@
 
 // }
 
-package main 
+//package main
+//
+//import "fmt"
+//
+//func main() {
+//	a := [2]int{0, 0}
+//
+//	if a == nil {
+//		fmt.Println("true")
+//	} else {
+//		fmt.Println("false")
+//	}
+//}
 
-import (
-	"fmt"
-	"sync"
-)
+//package main
+//
+//import (
+//	"fmt"
+//)
+//
+//func main() {
+//	b := new(bool)
+//	modify(b)
+//	fmt.Println(b)
+//}
+//
+//func modify(b *bool) {
+//	b = nil
+//}
 
-func main(){
-	arr := []int{21, 35, 123, 45, 324, 333}
-	wg := sync.WaitGroup{}
-	done := make(chan bool)
-	//mu := sync.Mutex{}
-	mx := arr[0]
-	for _, val := range arr {
-		wg.Add(1)
-		go func(){
-			defer wg.Done()
-			//mu.Lock()
-			if val > mx{
-				mx = val
-
-			}
-			//mu.Unlock()
-		}()
-	}
-	<-done
-
-	//wg.Wait()
-	fmt.Println(mx)
-}
+//package main
+//
+//import (
+//	"fmt"
+//	"sync"
+//)
+//
+//func main() {
+//	var wg sync.WaitGroup
+//	counter := 0
+//	for i := 0; i < 5; i++ {
+//		wg.Add(1)
+//		go func() {
+//			defer wg.Done()
+//			counter++
+//		}()
+//	}
+//	wg.Wait()
+//	fmt.Println(counter)
+//}

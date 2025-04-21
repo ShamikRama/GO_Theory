@@ -62,24 +62,21 @@
 //     fmt.Printf("Memory usage after: %d bytes\n", m.Alloc)
 // }
 
-// package main
-
-// import "fmt"
-
-// type account struct {
-// 	balance int
-// }
-
-// func main(){
-// m:=make(map[string]*account)
-// m["user1"]=&account{
-// 	balance:100,
-// }
-// m["user1"].balance += 50
-// 	//Написать что-то, чтобы увеличить баланс на 50
-// fmt.Println(m["user1"].balance)
-
-
-// }
-
-
+//package main
+//
+//import "fmt"
+//
+//type account struct {
+//	balance int
+//}
+//
+//func main() {
+//	m := make(map[string]*account)
+//	m["user1"] = &account{
+//		balance: 100,
+//	}
+//	m["user1"].balance += 50
+//	//Написать что-то, чтобы увеличить баланс на 50
+//	fmt.Println(m["user1"].balance)
+//
+//}

@@ -74,59 +74,61 @@
 // 	time.Sleep(10 * time.Second)
 // }
 
-// package main
+package main
 
-// import (
-// 	"fmt"
-// 	"sync"
-// )
+import (
+	"fmt"
+	"sync"
+)
 
-// func some(chj ...chan int) chan int {
-// 	wg := sync.WaitGroup{}
-// 	size := 0
-// 	for _, c := range chj {
-// 		size += len(c)
-// 	}
-// 	res := make(chan int, size)
-// 	for _, cha := range chj {
-// 		wg.Add(1)
-// 		go func(cha chan int) {
-// 			defer wg.Done()
-// 			for val := range cha {
-// 				res <- val
-// 			}
-// 		}(cha)
-// 	}
-// 	wg.Wait()
-// 	close(res)
-// 	return res
-// }
+func some(chj ...chan int) chan int {
+	wg := sync.WaitGroup{}
+	size := 0
+	for _, c := range chj {
+		size += len(c)
+	}
+	res := make(chan int, size)
+	for _, cha := range chj {
+		wg.Add(1)
+		go func(cha chan int) {
+			defer wg.Done()
+			for val := range cha {
+				res <- val
+			}
+		}(cha)
+	}
+	go func() {
+		wg.Wait()
+		close(res)
+	}()
+	return res
+}
 
-// func main() {
-// 	ch1 := make(chan int, 3)
-// 	ch1 <- 1
-// 	ch1 <- 2
-// 	ch1 <- 3
-// 	close(ch1)
+func main() {
+	ch1 := make(chan int, 3)
+	ch1 <- 1
+	ch1 <- 2
+	ch1 <- 3
+	close(ch1)
 
-// 	ch2 := make(chan int, 3)
-// 	ch2 <- 4
-// 	ch2 <- 5
-// 	ch2 <- 6
-// 	close(ch2)
+	ch2 := make(chan int, 3)
+	ch2 <- 4
+	ch2 <- 5
+	ch2 <- 6
+	close(ch2)
 
-// 	ch3 := make(chan int, 3)
-// 	ch3 <- 7
-// 	ch3 <- 8
-// 	ch3 <- 9
-// 	close(ch3)
+	ch3 := make(chan int, 3)
+	ch3 <- 7
+	ch3 <- 8
+	ch3 <- 9
+	close(ch3)
 
-// 	res := some(ch1, ch2, ch3)
+	res := some(ch1, ch2, ch3)
 
-// 	for val := range res {
-// 		fmt.Println(val)
-// 	}
-// }
+	for val := range res {
+		fmt.Println(val)
+	}
+}
 
 // func main() {
 // 	ch := make(chan int, 7) // Буферизированный канал с емкостью 3
@@ -221,44 +223,39 @@
 // 	}
 // }
 
-package main
+// package main
 
-import (
-	"fmt"
-	"sync"
-)
-
-func main() {
-	jobs := make(chan int, 2) // Буферизованный канал с размером буфера 2
-	done := make(chan bool)
-	var wg sync.WaitGroup
-
-	// Добавляем одну горутину в WaitGroup
-	wg.Add(1)
-
-	go func() {
-		defer wg.Done()
-		for i := 0; i < 5; i++ {
-			i := i
-			select {
-			case jobs <- i:
-				fmt.Println("Отправлено", i)
-			default:
-				fmt.Println("Канал заполнен, пропускаем отправку")
-			}
-		}
-		close(jobs) // Закрываем канал после отправки всех данных
-	}()
-
-	go func() {
-		wg.Wait() // Ждем, пока все горутины завершат работу
-		done <- true
-	}()
-
-	for j := range jobs {
-		fmt.Println("Получено задание:", j)
-	}
-
-	<-done
-	fmt.Println("Все задания получены")
-}
+//func main() {
+//	jobs := make(chan int, 2) // Буферизованный канал с размером буфера 2
+//	done := make(chan bool)
+//	var wg sync.WaitGroup
+//
+//	// Добавляем одну горутину в WaitGroup
+//	wg.Add(1)
+//
+//	go func() {
+//		defer wg.Done()
+//		for i := 0; i < 5; i++ {
+//			i := i
+//			select {
+//			case jobs <- i:
+//				fmt.Println("Отправлено", i)
+//			default:
+//				fmt.Println("Канал заполнен, пропускаем отправку")
+//			}
+//		}
+//		close(jobs) // Закрываем канал после отправки всех данных
+//	}()
+//
+//	go func() {
+//		wg.Wait() // Ждем, пока все горутины завершат работу
+//		done <- true
+//	}()
+//
+//	for j := range jobs {
+//		fmt.Println("Получено задание:", j)
+//	}
+//
+//	<-done
+//	fmt.Println("Все задания получены")
+//}
