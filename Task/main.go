@@ -1,4 +1,5 @@
 //package main
+
 //
 //import (
 //	"fmt"
@@ -166,6 +167,7 @@
 //	arr1 := []int{56, 768, 3, 6, 4}
 //	fmt.Println(dub(arr, arr1))
 //}
+
 //
 //package main
 //
@@ -301,14 +303,13 @@
 //	nums := []int{1, 2, 3}
 //	fmt.Println(len(nums), cap(nums)) // len 3 cap 3
 //
-//	addNum(nums[0:2])
+//	addNum(nums[0:2])                 // len 2 cap 3
 //	fmt.Println(nums)                 // 1 2 4
 //	fmt.Println(len(nums), cap(nums)) // len 3 cap 3
 //
-//	addNums(nums[0:2])
-//	fmt.Println(nums)                 //
-//	fmt.Println(len(nums), cap(nums)) // len 3 cap 3
-//
+//	addNums(nums[0:2])                // len 2 cap 3
+//	fmt.Println(nums)                 // 1 2 3
+//	fmt.Println(len(nums), cap(nums)) //  len 3 cap 3
 //}
 //
 //func addNum(nums []int) {
@@ -317,7 +318,7 @@
 //
 //func addNums(nums []int) {
 //	nums = append(nums, 5, 6)
-//	fmt.Println(nums)
+//	fmt.Println(nums) // 1 2 5 6
 //}
 
 // Функция для попарного объединения двух слайсов
@@ -329,10 +330,9 @@
 //func mergeSlicesPairwise(slice1, slice2 []int) [][]int {
 //	// Определяем длину минимального слайса
 //	minLen := len(slice1)
-//	if len(slice2) < minLen {
+//	if minLen > len(slice2) {
 //		minLen = len(slice2)
 //	}
-//
 //	// Создаем результирующий слайс
 //	result := make([][]int, minLen)
 //
@@ -408,40 +408,42 @@
 //
 //func main() {
 //	// Создаем срез с начальной емкостью 5 для избежания реаллоцирования
-//	x := []int{} // len 0 cap 0
-//	fmt.Println(len(x), cap(x))
-//	x = append(x, 0) // len 1 cap 1
-//	fmt.Println(len(x), cap(x))
-//	x = append(x, 1) // len 2 cap 2
-//	fmt.Println(len(x), cap(x))
-//	x = append(x, 2) // len 3 cap 4
-//	fmt.Println(len(x), cap(x))
-//	// 0 1 2
+//	x := []int{}
+//	fmt.Println(len(x), cap(x)) // len 0 cap 0
+//	x = append(x, 0)            // len 1 cap 1
+//	fmt.Println(len(x), cap(x)) // len 1 cap 1
+//	x = append(x, 1)            // len 2 cap 2
+//	fmt.Println(len(x), cap(x)) // len 2 cap 2
+//	x = append(x, 2)
+//	fmt.Println(len(x), cap(x)) // len 3 cap 4
+//
 //	// Добавляем элементы в x — изменения отразятся на всех срезах
-//	y := append(x, 3) // len 4 cap 4
-//	z := append(x, 4) // len 4 cap 4
+//	y := append(x, 3) // 0 1 2 3
+//	z := append(x, 4) // 0 1 2 3 4
 //
 //	// Все три среза указывают на общий массив и видят изменения
-//	fmt.Println(x, y, z) // Вывод: [0 1 2] [0 1 2 4] [0 1 2 4]
+//	fmt.Println(x, y, z)
 //}
 
 //// написать функцию которая выводит дубликаты
 //package main
 //
-//import "fmt"
+//import (
+//	"fmt"
+//)
 //
 //func foo(sl1 []int, sl2 []int) []int {
+//	mapa := make(map[int]bool)
+//
 //	res := make([]int, 0)
 //
-//	uMap := make(map[int]struct{})
-//
 //	for _, val := range sl1 {
-//		uMap[val] = struct{}{}
+//		mapa[val] = true
 //	}
 //
-//	for _, val := range sl2 {
-//		if _, ok := uMap[val]; !ok {
-//			res = append(res, val)
+//	for _, val2 := range sl2 {
+//		if mapa[val2] {
+//			res = append(res, val2)
 //		}
 //	}
 //
@@ -463,31 +465,31 @@
 //)
 //
 //func foo(nums []int) int {
-//	uMap := make(map[int]struct{})
+//	mapa := make(map[int]struct{})
 //
 //	for _, val := range nums {
-//		uMap[val] = struct{}{}
+//		mapa[val] = struct{}{}
 //	}
 //
-//	min := nums[0]
-//	max := nums[0]
+//	minLen, maxLen := nums[0], nums[0]
 //
 //	for _, val := range nums {
-//		if val < min {
-//			min = val
+//		if val < minLen {
+//			minLen = val
 //		}
-//		if val > max {
-//			max = val
+//		if val > maxLen {
+//			maxLen = val
 //		}
 //	}
 //
 //	var res int
 //
-//	for i := min; i <= max; i++ {
-//		if _, ok := uMap[i]; !ok {
+//	for i := minLen; i < maxLen; i++ {
+//		if _, ok := mapa[i]; !ok {
 //			res = i
 //		}
 //	}
+//
 //	return res
 //}
 //
@@ -777,7 +779,6 @@
 //GROUP ba.book_id, b.name
 //HAVING COUNT(ba.author_id) > 3;
 
-
 //SELECT a.name
 //FROM Book_Order bo
 //JOIN Book_Author ba ON ba.book_id = bo.book_id
@@ -785,7 +786,6 @@
 //GROUP BY ba.author_id, a.name
 //ORDER BY bo.reader_id DESC
 //LIMIT 3;
-
 
 //// у нас есть набор url, надо написать программу которая поочередно выполнит запросы, если
 //// получили ответ OK, то написать url - ok, иначе utl - not ok
@@ -1074,35 +1074,78 @@
 //
 //Доп: Выбрать все чаты пользователя Вася в формате (chat_id,chat_name)
 
-CREATE TABLE users (
-user_id SERIAL PRIMARY KEY,
-name VARCHAR(255) NOT NULL,
-registration_date TIMESTAMP NOT NULL DEFAULT NOW()
-);
+//CREATE TABLE users (
+//user_id SERIAL PRIMARY KEY,
+//name VARCHAR(255) NOT NULL,
+//registration_date TIMESTAMP NOT NULL DEFAULT NOW()
+//);
+//
+//CREATE TABLE chats (
+//chat_id SERIAL PRIMARY KEY,
+//chat_name VARCHAR(255) NOT NULL,
+//creation_date TIMESTAMP NOT NULL DEFAULT NOW()
+//);
+//
+//CREATE TABLE messages (
+//message_id SERIAL PRIMARY KEY,
+//text TEXT NOT NULL,
+//user_id INT REFERENCES users(user_id),
+//chat_id INT REFERENCES chats(chat_id),
+//creation_date TIMESTAMP NOT NULL DEFAULT NOW()
+//);
+//
+//-- Таблица для связи многие-ко-многим между пользователями и чатами
+//CREATE TABLE user_chat (
+//user_id INT REFERENCES users(user_id),
+//chat_id INT REFERENCES chats(chat_id),
+//PRIMARY KEY (user_id, chat_id)
+//);
+//
+//SELECT c.chat_id, c.chat_name
+//FROM users u
+//JOIN user_chat uc ON u.user_id = uc.user_id
+//JOIN chats c ON uc.chat_id = c.chat_id
+//WHERE u.name = 'Вася';
 
-CREATE TABLE chats (
-chat_id SERIAL PRIMARY KEY,
-chat_name VARCHAR(255) NOT NULL,
-creation_date TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE messages (
-message_id SERIAL PRIMARY KEY,
-text TEXT NOT NULL,
-user_id INT REFERENCES users(user_id),
-chat_id INT REFERENCES chats(chat_id),
-creation_date TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
--- Таблица для связи многие-ко-многим между пользователями и чатами
-CREATE TABLE user_chat (
-user_id INT REFERENCES users(user_id),
-chat_id INT REFERENCES chats(chat_id),
-PRIMARY KEY (user_id, chat_id)
-);
-
-SELECT c.chat_id, c.chat_name
-FROM users u
-JOIN user_chat uc ON u.user_id = uc.user_id
-JOIN chats c ON uc.chat_id = c.chat_id
-WHERE u.name = 'Вася';
+//package main
+//
+//import (
+//	"context"
+//	"sync"
+//)
+//
+//func case3(channels ...chan int) chan int {
+//	res := make(chan int)
+//	wg := sync.WaitGroup{}
+//	ctx, cancel := context.WithCancel(context.Background())
+//
+//	for _, ch := range channels {
+//		wg.Add(1)
+//		go func(c chan int) {
+//			defer wg.Done()
+//			for {
+//				select {
+//				case <-ctx.Done():
+//					return
+//				case val, ok := <-c:
+//					if !ok {
+//						return
+//					}
+//					select {
+//					case <-ctx.Done():
+//						return
+//					case res <- val:
+//					}
+//				}
+//			}
+//		}(ch)
+//	}
+//
+//	go func() {
+//		wg.Wait()
+//		close(res)
+//		cancel()
+//	}()
+//
+//	return res
+//}

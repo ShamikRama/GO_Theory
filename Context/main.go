@@ -1,5 +1,3 @@
-// package main
-
 // import (
 // 	"context"
 // 	"fmt"
@@ -39,10 +37,6 @@
 // 	}
 // }
 
-
-
-
-
 package main
 
 import (
@@ -53,11 +47,9 @@ import (
 )
 
 func main() {
-	// Создаем контекст с таймаутом в 5 секунд
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel() // Важно вызвать cancel, чтобы освободить ресурсы
+	defer cancel()
 
-	// Запускаем горутину, которая будет работать до отмены контекста
 	go func() {
 		for {
 			select {
@@ -71,10 +63,8 @@ func main() {
 		}
 	}()
 
-	// Делаем HTTP-запрос с использованием контекста
 	makeRequest(ctx, "https://example.com")
 
-	// Ждем немного, чтобы увидеть, как горутина завершается
 	time.Sleep(6 * time.Second)
 }
 
